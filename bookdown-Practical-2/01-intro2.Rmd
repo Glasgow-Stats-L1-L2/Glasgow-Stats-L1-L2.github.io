@@ -1,0 +1,312 @@
+# Examples
+
+
+---
+
+## Example 1 - `crime` dataset
+
+a) Use `pairs` to visualise the data and determine which predictors may be useful in predicting
+Crime.
+
+`r hide("Hint")`
+
+The `R` command `pairs()` may be used to see the relationships between all variables.
+
+`r unhide()`
+
+`r hide("Solution")`
+
+```{r}
+crime <- read.csv("crime.csv")
+pairs(crime[,-1], lower.panel = NULL)
+# We add [,-1] to the end of crime to remove the first column which has non-numeric arguments (state names)
+```
+
+`r unhide()`
+
+b) Build a simple linear regression model against `Dropout` and interpret estimated coefficients.
+
+According to the model, when Dropout is equal to 0, Crime would be roughly `r mcq(c(2000, answer=2200, 2400))`.
+For each 1 unit increase in the Dropout variable, Crime would go up by roughly `r fitb(281.7613)` _(to 4 decimal places)_.
+
+`r hide("Solution")`
+
+```{r}
+model1 <- lm(Crime ~ Dropout, data = crime)
+coef(model1)
+```
+
+`r unhide()`
+
+c) Calculate the least squares estimates of model parameters using the vector-matrix formulation.
+
+`r hide("Hint")`
+
+The following `R` commands will come in uesful:
+
+<center> `model.matrix # returns the design matrix` </center>
+<center> `t # gets the transpose of a vector or matrix` </center>
+<center> `%*% # multiplies matrices together` </center>
+<center> `solve # computes the inverse of a matrix` </center>
+
+Recall the least squares estimate of the model parameters in terms of vector-matrix notation is given by
+
+\begin{equation}
+ \hat{\beta}=(X^{T}X)^{-1}X^{T}Y
+(\#eq:eq1)
+\end{equation}
+
+`r unhide()`
+
+`r hide("Solution")`
+
+```{r}
+X <- model.matrix(~ Dropout, data = crime)
+
+XtX <- t(X) %*% X
+
+# The inverse of XtX can be found by using solve(XtX)
+
+Y <- crime$Crime
+
+XtY <- t(X) %*% Y
+
+beta.hat <- solve(XtX) %*% XtY
+
+beta.hat
+```
+
+`r unhide()`
+
+d) Check this is same as the results computed using the summation notation (discussed in Practical 1).
+
+`r hide("Hint")`
+
+Recall that the equations for the least square estimates using the summation notation are
+
+\begin{equation}
+ \hat{\beta}_0= \overline{Y}-\hat{\beta}_1 \overline{x}
+(\#eq:eq3)
+\end{equation}
+
+and 
+
+\begin{equation}
+ \hat{\beta}_1= \frac{\sum^n_{i=1}(x_i-\overline{x})(Y_i-\overline{Y})}{\sum^n_{i=1}(x_i-\overline{x})^2}
+(\#eq:eq4)
+\end{equation}
+
+`r unhide()`
+
+`r hide("Solution")`
+
+```{r}
+Y <- crime$Crime
+x <- crime$Dropout
+
+b1 <- sum((x - mean(x)) * (Y - mean(Y)))/sum((x - mean(x))^2)
+b0 <- mean(Y) - b1 * mean(x)
+```
+
+`r unhide()`
+
+e) Use 1 or more predictors alongside Dropout to build a multiple linear regression model for explaining Crime.
+
+`r hide("Hint")`
+
+Use the graph found using the `pairs()` command in a) to select predictors that appear suitable for describing Crime.
+
+Recall that a multiple linear regression model can be constructed using 
+
+<center> `model <- lm(Crime ~ Dropout + Predictor1 + Predictor2 + ..., data = crime)` </center>
+
+```{r, echo=FALSE, eval=FALSE}
+
+mlrmodel <- lm(Crime ~ Dropout + Police + Prison, data = crime)
+summary(mlrmodel)
+```
+
+
+`r unhide()`
+
+f) Calculate the least squares estimates of parameters using the vector-matrix formulation in the new multiple linear regression model.
+
+`r hide("Solution")`
+
+The same steps can be followed as in c), but the design matrix `X` has to be updated accordingly. Say we want to add `Police` and `Prison` variables to our model. We would then use the following code.
+
+
+```{r, echo=TRUE, eval=TRUE}
+X <- model.matrix(~ Dropout + Police + Prison, data = crime)
+
+XtX <- t(X) %*% X
+
+# The inverse of XtX can be found by using solve(XtX)
+
+Y <- crime$Crime
+
+XtY <- t(X) %*% Y
+
+beta.hat <- solve(XtX) %*% XtY
+
+beta.hat
+
+```
+
+`r unhide()`
+
+
+## Example 2 - `phys` dataset{#twopointtwo}
+
+Recall Example 1 from **Practical 1** in which volunteers had their power output (in watts), weight, and leg
+length measurements recorded. Here we would like to assess the strength of the relationship, if any, between _Power Output_ and *Weight*,
+which we explored in scatterplots in the previous practical, displayed in Figure 1. We are going to do this
+for male and female volunteers separately, such that we assess the statistical significance of the observed
+correlation between these two variables in the wider populations of (i) males and (ii) females.
+
+```{r fig1, echo=FALSE, fig.align = 'center', fig.cap='Scatterplot of Power Output versus Weight.'}
+phys <- read.csv("phys.csv")
+plot(Power1 ~ Weight, data = phys, xlab = "Weight (kgs)",
+ylab = "Power Output (Watts)", pch = as.character(phys$Gender))
+legend("topleft", legend = c("Female", "Male"),
+pch = c("F", "M"), bty = "n", cex = 1.5)
+```
+
+Firstly, we subset the data for males and females. One way to do this is:
+
+<center> `physM <- subset(phys, Gender == "Male", data = phys)` </center>
+<center> `physF <- subset(phys, Gender == "Female", data = phys)` </center>
+
+```{r, echo=FALSE}
+physM <- subset(phys, Gender == "Male", data = phys)
+physF <- subset(phys, Gender == "Female", data = phys)
+
+#cor.test(physF$Power1, physF$Weight)
+```
+
+
+We now perform, separately for males and females, the following hypothesis test:
+
+<center> $H_0: \rho=0$     vs.    $H_1:\rho \ne 0$</center>
+
+We test the null hypothesis, $H_0$, that is, that in the population of males/females the correlation between
+_Power Output_ and _Weight_ is 0 against the alternative hypothesis, $H_1$, that the correlation is not equal to 0.
+
+To compute the sample correlation coefficient, $r$, and perform our hypothesis test, we use the `cor.test`
+command. For the males data, the command is as follows:
+
+<center> `cor.test(physM$Power1, physM$Weight)` </center>
+
+Note: in the `cor.test` command the $ notation is required to access the variables from the subsetted data.
+
+The hypothesis test produces a _p_-value, where we reject the null hypothesis, $H_0$, for small values of the
+_p_-value (typically _p_-values < 0.05). It also produces a 95% confidence interval for a range of plausible
+values for the true population correlation.
+
+What is the sample correlation coefficient for the males data? `r fitb("0.8136")` _(to 4 decimal places)_
+
+What is the _p_-value for the test? `r fitb("0.000224")` _(to 6 decimal places)_
+
+The sample correlation coefficient tells us that _Power Output_ and _Weight_ have a `r mcq(c("weak", answer="strong"))`, `r mcq(c("negative", answer="positive"))` relationship.
+
+Based on the p-value of the test, we would `r mcq(c(answer="reject the null hypothesis", "fail to reject the null hypothesis"))`.
+
+Perform the same test on the Female data.
+
+What is the sample correlation coefficient for the females data? `r fitb("0.3664")` _(to 4 decimal places)_
+
+What is the _p_-value for the test? `r fitb("0.1791")` _(to 4 decimal places)_
+
+The sample correlation coefficient tells us that _Power Output_ and _Weight_ have a `r mcq(c(answer="weak", "strong"))`, `r mcq(c("negative", answer="positive"))` relationship.
+
+Based on the p-value of the test, we would `r mcq(c("reject the null hypothesis", answer="fail to reject the null hypothesis"))`.
+
+Note: if we do not subset the data by gender, we obtain a sample correlation coefficient $r = 0.89$, with a _p_-value $\lt$ 0.05, and thus we would conclude that there is a strong, positive linear relationship between Power Output and Weight. However, we now know that is not the case for females.
+
+## Calculating the correlation by hand
+
+To compute the sample correlation coefficient, r, the command cor.test uses the formula given in \@ref(eq:eq2).
+To check that the cor.test command is ‘correct’, we can ourselves calculate the correlation directly
+using the following commands:
+
+<center> `var # computes the variance of a given vector` </center>
+<center> `cov # computes the covariance between the vectors x and y` </center>
+<center> `sum # returns the sum of the values given` </center>
+<center> `mean # computes the mean of a given vector` </center>
+<center> `sqrt # computes the square-root of a given vector` </center>
+
+Give your answers to 3 decimal places where required.
+
+a) Using the commands `var` and `cov`, compute the variance and covariance given in \@ref(eq:eq1) for the males
+data, where _Y_ denotes the response variable _Power Output_, and _X_ denotes the explanatory variable
+_Weight_.
+
+The variance of the explanatory variable _Weight_ is `r fitb(47.374)`.
+The variance of the response variable _Power Output_ is `r fitb(c(25435.39, 25435.390))`.
+The covariance of the response and explanatory variables is `r fitb(893.147)`.
+
+`r hide("Solution")`
+```{r, eval=TRUE, echo=TRUE}
+X <- physM$Weight
+Y <- physM$Power1
+
+var(X)
+var(Y)
+cov(X, Y)
+```
+`r unhide()`
+
+b) Using the variance and covariance obtained in (a), and the square-root command, `sqrt`, compute the
+sample correlation coefficient using the formula given in \@ref(eq:eq1) for the males data. Does this match what
+was obtained using the `cor.test` command?
+
+The sample correlation coefficient using the variance and covariance obtained in (a) is `r fitb(0.814)`.
+
+This `r mcq(c(answer="matches", "does not match"))` the sample correlation coefficient found using `cor.test`.
+
+`r hide("Solution")`
+
+```{r, eval=TRUE}
+cov(X, Y)/sqrt(var(X)*var(Y))
+cor.test(physM$Weight, physM$Power1)$estimate
+```
+
+`r unhide()`
+
+c) Use the `mean`, `sum`, and `sqrt` commands to compute the sum of squares, $S_{xx}$ and $S_{yy}$, and the sum
+of products, $S_{xy}$, given in formula \@ref(eq:eq2) for the males data.
+
+Give your answers to 3 decimal places where required.
+
+$S_{xx}$: `r fitb(663.233)`
+
+$S_{yy}$: `r fitb(356095.5)`
+
+$S_{xy}$: `r fitb(12504.06)`
+
+`r hide("Solution")`
+
+```{r}
+Sxx <- sum((X-mean(X))^2)
+
+Syy <- sum((Y-mean(Y))^2)
+
+Sxy <- sum((X-mean(x))*(Y-mean(Y)))
+
+c(Sxx, Syy, Sxy)
+```
+
+`r unhide()`
+
+d) Use the sum of squares and sum of products obtained in (c) to compute the sample correlation coefficient, $r$, using formula \@ref(eq:eq2) for the males data. Does this match your answers from (b) and the `cor.test` command?
+
+The sample correlation coefficient found using the sum of squares and sum of products above is `r fitb(0.814)`, which is `r mcq(c("not the same", answer="the same"))` as the value found when using `cor.test`.
+
+`r hide("Solution")`
+
+```{r}
+Sxy/sqrt(Sxx*Syy)
+```
+
+`r unhide()`
+
