@@ -1,0 +1,22 @@
+bookdown::gitbook:
+  css:
+  - style.css
+  - include/webex.css
+  config:
+    toc:
+      before: ~
+      after: ~
+    download:
+    - pdf
+    - epub
+  includes:
+    after_body: include/webex.js
+  md_extensions: -smart
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+bookdown::epub_book: default
+bookdown::bs4_book: default

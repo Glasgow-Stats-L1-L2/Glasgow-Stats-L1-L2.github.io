@@ -1,0 +1,38 @@
+# Exercise 4 - Transformation of the response and predicator
+
+The `Animals` data set which pertains to Brain and Body Weights for 28 Species. You can get this data set using the `library(Mass)`
+
+In this dataset there are three outliers which are the dinosaurs.
+<br> (a) Sort the data by body and remove the last three dinosaur elements using the following code:
+```{r eval = TRUE, echo = TRUE, webex.hide="Sorting your data"}
+SA <- Animals[order(Animals$body), ] #sorted by body weight
+NoDINO <- SA[-c(28:26), ] #remove dinosaurs
+```
+Now treating the data as we done in the previous exercise transform both the response and predictor:
+<br> (b)	Define a linear model for the transformed response and transformed predictor .
+```{r eval = TRUE, echo=TRUE, webex.hide="Solution"}
+model1 <- lm(log(brain) ~ log(body), data = NoDINO)
+```
+<br> (c)	Use the function coef() to answer the below questions:
+```{r eval = TRUE,echo=TRUE, webex.hide="Coef function solution"}
+coef(model1)
+```
+<br>i. What is the predicted brain weight of the jaguar whose weight is listed as 100 kg? 
+
+<br>
+Log(Brain weight) = `r fitb(2.1504)` + (`r fitb(0.7523)` $\cdot$ log(`r fitb(100)`)) = `r fitb(5.6149)`.
+
+<br>*This must be back transformed to get the units of original brain measurement (grams).* <br>
+Brain weight = $exp($`r fitb(5.6149)`$)$ = `r fitb(274.48)`g
+<br>
+
+`r hide("Solution")` Log(Brain weight) = $2.1504$ + ($0.7523$ $\cdot$ $log(100) = 5.6149$. Back-transforming with exponential menas Brain weight = $exp(5.6149)$  = $274.48$g `r unhide()`
+
+<br>ii.  If said jaguar were to increase its weight by 10%, what would the expected increase in brain weight be? 
+
+<br>"With the coefficient of `r fitb(0.7523)`, an increase in body weight of 1% would lead to `r fitb(c(7.523, 7.5, 7.52))`% increase in brain weight.
+`r fitb(c(1.07523, 1.0752, 1.075))` * `r fitb(274.48)` = `r fitb(c(295.06, 295.063, 295.0634))` g"
+
+
+`r hide("Solution")` "With the coefficient of $0.7523$, an increase in body weight of 1% would lead to $7.523$% increase in brain weight.
+so $1.07523 * 274.48$ = $295.0634$g `r unhide()`

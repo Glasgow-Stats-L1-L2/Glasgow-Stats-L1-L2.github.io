@@ -1,0 +1,17 @@
+introduction
+intended-learning-outcomes
+example-1---life-expectancy-log-transformation-on-x
+statistical-analysis
+assumption-checking
+regression-output
+example-2---car-stopping-power-transformation-on-y
+statistical-analysis-1
+assumption-checking-1
+regression-output-1
+example-3---mammal-weight-log-transformation-on-both-x-and-y
+exercise-1---transformation-of-predictors
+exercise-2
+exercise-2-part-1---transforming-y-with-ln
+exercise-2-part-2---transforming-y-with-a-reciprical
+exercise-3---transformation-of-the-response-and-predicator
+exercise-4---transformation-of-the-response-and-predicator

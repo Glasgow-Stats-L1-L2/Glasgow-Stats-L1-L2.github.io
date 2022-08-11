@@ -1,0 +1,93 @@
+# Example 2 - Car stopping (power transformation on y)
+
+The `stopping.csv` file contains 63 observations of cars. In these observations, two variables were recorded, namely the speed of cars when the brakes were applied (in mile per hour) and the stopping.
+
+```{r eval = FALSE, webex.hide="How to read in your data"}
+stopping <- read.csv("Stopping.csv")
+```
+
+
+<br> (a) i. Create a scatterplot of `Distance` against `Speed`.
+
+`r hide("Hint")` We can use the code `plot()`. What variables do we want on our x and y axis?
+`r unhide()`
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+plot(Distance ~ Speed, data = stopping)
+```
+
+
+(ii) Look at your plot and pick the correct statement.
+```{r, echo = FALSE}
+opts_p <- c("There is a no relationship between Stopping Distance and Speed", "There is an non-linear relationship between Stopping Distance and Speed and as Speed increases, Distance decreases", answer = "TThere is an non-linear relationship between Stopping Distance and Speed and as Speed increases, Distance increases")
+```
+`r longmcq(opts_p)`
+
+<br> As the relationship appears to be **non-linear**, we might want to apply a transformation to one of the variables. <br>
+
+(iii) What transformation should we apply here:
+`r mcq(c("Logarithmic to the predictor", answer = "Square-root to the response", "No transformation"))` <br>
+
+(iv) Create a new scatterplot of with the transformed data:
+
+`r hide("Hint")` We can use the code`plot()` again. Change Y to be the square root of your response variable. You may need to change the axis label too. 
+`r unhide()`
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+plot(sqrt(Distance) ~ Speed, data = stopping, ylab= "Square root of Distance (in feet)")
+```
+
+## Statistical Analysis
+
+The model for the relationship between `Speed` and `sqrt(Distance)` is therefore:
+$\sqrt{Y_i} = \alpha + \beta x_i + \epsilon_i$, where $\epsilon_i \sim N(0, \sigma^2)$ and $i = 1, . . . , 63.$
+
+<br> (b) What type of model is this?
+`r mcq(c(answer = "Simple Linear Regression", "Multiple Regression", "Non-linear Regression"))` <br>
+
+(i) Use the `lm()` function to fit this model to your plot:
+help(lm)
+
+`r hide("Hint")` Use the `help(lm)` function  to see what parameters you need within the function.
+`r unhide()`
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+Model1 <- lm(sqrt(Distance) ~ Speed, data = stopping)
+```
+## Assumption Checking
+<br>(c) i. Model assumptions can be assessed graphically by producing a plot of the residuals versus the fitted values and a normal probability plot (Q-Q plot) of the residuals.
+
+`r hide("Hint")` Use the `plot(rstandard()~fitted())` function for the residual plot and the code `qqnorm` for the Q-Q plot.
+`r unhide()`
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+plot(rstandard(Model1) ~ fitted(Model1))
+qqnorm(rstandard(Model1))
+```
+(ii) The residual vs fitted values plot shows that the points `r mcq(c(answer = "are", "are not"))` fairly evenly scattered above and below the`r mcq(c("mean line", answer ="zero line"))`, which suggests it `r mcq(c(answer = "is", "is not"))` reasonable to assume that the random errors have mean equal to `r mcq(c("µ", answer ="zero"))`. <br>
+
+(iii) In the normal probability plot, we see that points `r mcq(c("do", answer = "do not"))` exactly lie on diagonal line. This indicates that the Normality assumption `r mcq(c("may", answer = "may not"))`be satisfied.  This is not ideal but, on the positive side, the estimates of parameters will not be affected and hence we can still use the model to describe the relationship between variables and make predictions.<br>
+
+## Regression output
+<br> (d) i. Load the summary statistics: 
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+summary(Model1)
+```
+<br>
+
+(ii) Fill in the blanks in the regression equation with the calculated parameters to 3 decimal places:
+
+$\sqrt{Distance}$ = `r fitb(0.918)` − $\bigg($`r fitb(0.253)` $\cdot$ Speed $\bigg)$<br>
+<br>
+
+(iii) Interpret the parameters correctly and enter any numbers to 2 decimal places:
+
+This means the square root of distance is `r mcq(c(answer ="Positively", "Negatively"))` linearly related to speed. That is, as the speed increases
+by 1 MPH, the expected square root of distance `r mcq(c(answer = "increases", "decreases"))` by `r fitb(0.253)` feet. <br><br>
+
+(iv) Using the created model predict the Stopping Distance if the Speed is 20MPH, to 2 decimal places:
+
+`r hide("Hint")` When predicting the value of the response for a new observation, we need to back transform the transformed variable.
+`r unhide()`
+
+$Distance = \bigg($`r fitb(0.918)` + (`r fitb(0.253)` $\cdot$ `r fitb(30)`) $\bigg) ^2$ = `r fitb(35.64)`feet.

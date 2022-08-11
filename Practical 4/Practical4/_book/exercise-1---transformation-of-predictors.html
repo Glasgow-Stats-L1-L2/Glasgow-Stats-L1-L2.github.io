@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title> 5 Exercise 1 - Transformation of Predictors | Practical 4 - Transforming variables and further examining model assumptions</title>
+  <meta name="description" content=" 5 Exercise 1 - Transformation of Predictors | Practical 4 - Transforming variables and further examining model assumptions" />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content=" 5 Exercise 1 - Transformation of Predictors | Practical 4 - Transforming variables and further examining model assumptions" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content=" 5 Exercise 1 - Transformation of Predictors | Practical 4 - Transforming variables and further examining model assumptions" />
+  
+  
+  
+
+<meta name="author" content="Megan Ruffle" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="example-3---mammal-weight-log-transformation-on-both-x-and-y.html"/>
+<link rel="next" href="exercise-2.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="include/webex.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#intended-learning-outcomes"><i class="fa fa-check"></i><b>1.1</b> Intended Learning Outcomes</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="example-1---life-expectancy-log-transformation-on-x.html"><a href="example-1---life-expectancy-log-transformation-on-x.html"><i class="fa fa-check"></i><b>2</b> Example 1 - life expectancy (log-transformation on x)</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="example-1---life-expectancy-log-transformation-on-x.html"><a href="example-1---life-expectancy-log-transformation-on-x.html#statistical-analysis"><i class="fa fa-check"></i><b>2.1</b> Statistical Analysis</a></li>
+<li class="chapter" data-level="2.2" data-path="example-1---life-expectancy-log-transformation-on-x.html"><a href="example-1---life-expectancy-log-transformation-on-x.html#assumption-checking"><i class="fa fa-check"></i><b>2.2</b> Assumption Checking</a></li>
+<li class="chapter" data-level="2.3" data-path="example-1---life-expectancy-log-transformation-on-x.html"><a href="example-1---life-expectancy-log-transformation-on-x.html#regression-output"><i class="fa fa-check"></i><b>2.3</b> Regression output</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="example-2---car-stopping-power-transformation-on-y.html"><a href="example-2---car-stopping-power-transformation-on-y.html"><i class="fa fa-check"></i><b>3</b> Example 2 - Car stopping (power transformation on y)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="example-2---car-stopping-power-transformation-on-y.html"><a href="example-2---car-stopping-power-transformation-on-y.html#statistical-analysis-1"><i class="fa fa-check"></i><b>3.1</b> Statistical Analysis</a></li>
+<li class="chapter" data-level="3.2" data-path="example-2---car-stopping-power-transformation-on-y.html"><a href="example-2---car-stopping-power-transformation-on-y.html#assumption-checking-1"><i class="fa fa-check"></i><b>3.2</b> Assumption Checking</a></li>
+<li class="chapter" data-level="3.3" data-path="example-2---car-stopping-power-transformation-on-y.html"><a href="example-2---car-stopping-power-transformation-on-y.html#regression-output-1"><i class="fa fa-check"></i><b>3.3</b> Regression output</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="example-3---mammal-weight-log-transformation-on-both-x-and-y.html"><a href="example-3---mammal-weight-log-transformation-on-both-x-and-y.html"><i class="fa fa-check"></i><b>4</b> Example 3 - Mammal weight (log-transformation on both x and y)</a></li>
+<li class="chapter" data-level="5" data-path="exercise-1---transformation-of-predictors.html"><a href="exercise-1---transformation-of-predictors.html"><i class="fa fa-check"></i><b>5</b> Exercise 1 - Transformation of Predictors</a></li>
+<li class="chapter" data-level="6" data-path="exercise-2.html"><a href="exercise-2.html"><i class="fa fa-check"></i><b>6</b> Exercise 2</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="exercise-2.html"><a href="exercise-2.html#exercise-2-part-1---transforming-y-with-ln"><i class="fa fa-check"></i><b>6.1</b> Exercise 2 Part 1 - Transforming Y with ln</a></li>
+<li class="chapter" data-level="6.2" data-path="exercise-2.html"><a href="exercise-2.html#exercise-2-part-2---transforming-y-with-a-reciprical"><i class="fa fa-check"></i><b>6.2</b> Exercise 2 Part 2 - Transforming Y with a reciprical</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="exercise-3---transformation-of-the-response-and-predicator.html"><a href="exercise-3---transformation-of-the-response-and-predicator.html"><i class="fa fa-check"></i><b>7</b> Exercise 3 - Transformation of the response and predicator</a></li>
+<li class="chapter" data-level="8" data-path="exercise-4---transformation-of-the-response-and-predicator.html"><a href="exercise-4---transformation-of-the-response-and-predicator.html"><i class="fa fa-check"></i><b>8</b> Exercise 4 - Transformation of the response and predicator</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Practical 4 - Transforming variables and further examining model assumptions</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="exercise-1---transformation-of-predictors" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number"> 5</span> Exercise 1 - Transformation of Predictors<a href="exercise-1---transformation-of-predictors.html#exercise-1---transformation-of-predictors" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The data frame SIMDATAXT contains simulated data for the response, y, and predictors, <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and <span class="math inline">\(x_3\)</span>.
+We will apply appropriate transformations to <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_1\)</span>, and<span class="math inline">\(x_1\)</span> to linearise the relationships between the response and predictors one at a time.<br>
+<em>Remember that when you use operators such as</em> <span class="math inline">\(\text{+, -, ^, *, }\)</span> <em>you must use the identity function, </em> <span class="math inline">\(I()\)</span> <em>, to inhibit the interpretation of your formula operator as an arithmetic operator</em></p>
+<p><br> (a) Below are some questions to help you follow the right steps. Starting with <span class="math inline">\(x_1\)</span>:</p>
+<ol style="list-style-type: lower-roman">
+<li><p>Does the plot of <span class="math inline">\(x_1\)</span> against <span class="math inline">\(Y\)</span> appear linear? <select class='webex-select'><option value='blank'></option><option value=''>Yes</option><option value='answer'>No</option></select></p></li>
+<li><p>Which transformation produces a scatterplot that seem to present a linear relationship? <select class='webex-select'><option value='blank'></option><option value='answer'>Square-root x</option><option value=''>inverse of x (1/x)</option><option value=''>x squared</option><option value=''>No transformation</option></select></p></li>
+<li><p>Do both the residual plots, as well as the and the coefficient of determination, <span class="math inline">\(R^2\)</span> support this transformed model?</p>
+<p>
+<p>If no, go back to <em>ii.</em>
+<br></p></li>
+</ol>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="exercise-1---transformation-of-predictors.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of x1 against Y</span></span>
+<span id="cb24-2"><a href="exercise-1---transformation-of-predictors.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x1, <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears non-linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="exercise-1---transformation-of-predictors.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of data with a square root transformation</span></span>
+<span id="cb25-2"><a href="exercise-1---transformation-of-predictors.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">^</span><span class="fl">0.5</span>), <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-2.png" width="672" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="exercise-1---transformation-of-predictors.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your linear model</span></span>
+<span id="cb26-2"><a href="exercise-1---transformation-of-predictors.html#cb26-2" aria-hidden="true" tabindex="-1"></a>Model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">^</span><span class="fl">0.5</span>), <span class="at">data =</span> SIMDATAXT)</span>
+<span id="cb26-3"><a href="exercise-1---transformation-of-predictors.html#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="exercise-1---transformation-of-predictors.html#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the residual plots</span></span>
+<span id="cb26-5"><a href="exercise-1---transformation-of-predictors.html#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rstandard</span>(Model1) <span class="sc">~</span> <span class="fu">fitted</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-3.png" width="672" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="exercise-1---transformation-of-predictors.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">rstandard</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-4.png" width="672" /></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="exercise-1---transformation-of-predictors.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get the coefficient of determination, R-squared</span></span>
+<span id="cb28-2"><a href="exercise-1---transformation-of-predictors.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Model1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ I(x1^0.5), data = SIMDATAXT)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.6885 -0.8014 -0.0047  0.6989  3.4644 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -0.44101    0.17178  -2.567    0.011 *  
+## I(x1^0.5)    1.07688    0.02769  38.890   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.083 on 196 degrees of freedom
+##   (2 observations deleted due to missingness)
+## Multiple R-squared:  0.8853, Adjusted R-squared:  0.8847 
+## F-statistic:  1512 on 1 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="exercise-1---transformation-of-predictors.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.8853 is high enough to indicate a good fit and the assumpions here are met.</span></span></code></pre></div>
+</div>
+<p><br>(b) Repeat for <span class="math inline">\(x_2\)</span></p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="exercise-1---transformation-of-predictors.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of x2 against Y</span></span>
+<span id="cb31-2"><a href="exercise-1---transformation-of-predictors.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x2, <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears non-linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="exercise-1---transformation-of-predictors.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of data with a squared transformation</span></span>
+<span id="cb32-2"><a href="exercise-1---transformation-of-predictors.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> <span class="fu">I</span>(x2<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-2.png" width="672" /></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="exercise-1---transformation-of-predictors.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your linear model</span></span>
+<span id="cb33-2"><a href="exercise-1---transformation-of-predictors.html#cb33-2" aria-hidden="true" tabindex="-1"></a>Model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x2<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> SIMDATAXT)</span>
+<span id="cb33-3"><a href="exercise-1---transformation-of-predictors.html#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="exercise-1---transformation-of-predictors.html#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the residual plots</span></span>
+<span id="cb33-5"><a href="exercise-1---transformation-of-predictors.html#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rstandard</span>(Model1) <span class="sc">~</span> <span class="fu">fitted</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-3.png" width="672" /></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="exercise-1---transformation-of-predictors.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">rstandard</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-4.png" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="exercise-1---transformation-of-predictors.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get the coefficient of determination, R-squared</span></span>
+<span id="cb35-2"><a href="exercise-1---transformation-of-predictors.html#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Model1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ I(x2^2), data = SIMDATAXT)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.5088 -0.7309 -0.0139  0.7235  3.4310 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -0.3336     0.1679  -1.987   0.0482 *  
+## I(x2^2)       1.0619     0.0272  39.040   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.087 on 198 degrees of freedom
+## Multiple R-squared:  0.885,  Adjusted R-squared:  0.8844 
+## F-statistic:  1524 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="exercise-1---transformation-of-predictors.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.885 is high enough to indicate a good fit and the assumpions here are met.</span></span></code></pre></div>
+</div>
+<p><br>(c) Repeat for <span class="math inline">\(x_3\)</span></p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="exercise-1---transformation-of-predictors.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of x3 against Y</span></span>
+<span id="cb38-2"><a href="exercise-1---transformation-of-predictors.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x3, <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears non-linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="exercise-1---transformation-of-predictors.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot of data with an inverse transformation</span></span>
+<span id="cb39-2"><a href="exercise-1---transformation-of-predictors.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> <span class="fu">I</span>(x3<span class="sc">^-</span><span class="dv">1</span>), <span class="at">data =</span> SIMDATAXT) <span class="co"># This appears linear</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-2.png" width="672" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="exercise-1---transformation-of-predictors.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your linear model</span></span>
+<span id="cb40-2"><a href="exercise-1---transformation-of-predictors.html#cb40-2" aria-hidden="true" tabindex="-1"></a>Model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x3<span class="sc">^-</span><span class="dv">1</span>), <span class="at">data =</span> SIMDATAXT)</span>
+<span id="cb40-3"><a href="exercise-1---transformation-of-predictors.html#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="exercise-1---transformation-of-predictors.html#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the residual plots</span></span>
+<span id="cb40-5"><a href="exercise-1---transformation-of-predictors.html#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rstandard</span>(Model1) <span class="sc">~</span> <span class="fu">fitted</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-3.png" width="672" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="exercise-1---transformation-of-predictors.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">rstandard</span>(Model1))</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-4.png" width="672" /></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="exercise-1---transformation-of-predictors.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get the coefficient of determination, R-squared</span></span>
+<span id="cb42-2"><a href="exercise-1---transformation-of-predictors.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Model1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ I(x3^-1), data = SIMDATAXT)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.5088 -0.7309 -0.0139  0.7235  3.4310 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -0.3336     0.1679  -1.987   0.0482 *  
+## I(x3^-1)      1.0619     0.0272  39.040   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.087 on 198 degrees of freedom
+## Multiple R-squared:  0.885,  Adjusted R-squared:  0.8844 
+## F-statistic:  1524 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="exercise-1---transformation-of-predictors.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.885 is high enough to indicate a good fit and the assumpions here are met.</span></span></code></pre></div>
+</div>
+<p><br>(d) Which selection of variables therefore needed to be transformed?
+<select class='webex-select'><option value='blank'></option><option value=''>x1</option><option value=''>x2</option><option value=''>x3</option><option value=''>x1, x2</option><option value=''>x1, x3</option><option value=''>x2, x3</option><option value='answer'>x1, x2, x3</option><option value=''>none of the above</option></select></p>
+
+</div>
+<script>
+
+/* update total correct if #webex-total_correct exists */
+update_total_correct = function() {
+  console.log("webex: update total_correct");
+
+  if (t = document.getElementById("webex-total_correct")) {
+    var correct = document.getElementsByClassName("webex-correct").length;
+    var solvemes = document.getElementsByClassName("webex-solveme").length;
+    var radiogroups = document.getElementsByClassName("webex-radiogroup").length;
+    var selects = document.getElementsByClassName("webex-select").length;
+    
+    t.innerHTML = correct + " of " + (solvemes + radiogroups + selects) + " correct";
+  }
+}
+
+/* webex-solution button toggling function */
+b_func = function() {
+  console.log("webex: toggle hide");
+  
+  var cl = this.parentElement.classList;
+  if (cl.contains('open')) {
+    cl.remove("open");
+  } else {
+    cl.add("open");
+  }
+}
+
+/* function for checking solveme answers */
+solveme_func = function(e) {
+  console.log("webex: check solveme");
+
+  var real_answers = JSON.parse(this.dataset.answer);
+  var my_answer = this.value;
+  var cl = this.classList;
+  if (cl.contains("ignorecase")) {
+    my_answer = my_answer.toLowerCase();
+  }
+  if (cl.contains("nospaces")) {
+    my_answer = my_answer.replace(/ /g, "")
+  }
+
+  if (my_answer == "") {
+    cl.remove("webex-correct");
+    cl.remove("webex-incorrect");
+  } else if (real_answers.includes(my_answer)) {
+    cl.add("webex-correct");
+    cl.remove("webex-incorrect");
+  } else {
+    cl.add("webex-incorrect");
+    cl.remove("webex-correct");
+  }
+
+  // match numeric answers within a specified tolerance
+  if(this.dataset.tol > 0){
+    var tol = JSON.parse(this.dataset.tol);
+    var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+    if (matches.reduce((a, b) => a + b, 0) > 0) {
+      cl.add("webex-correct");
+    } else {
+      cl.remove("webex-correct");
+    }
+  }
+
+  // added regex bit
+  if (cl.contains("regex")){
+    answer_regex = RegExp(real_answers.join("|"))
+    if (answer_regex.test(my_answer)) {
+      cl.add("webex-correct");
+    }
+  }
+
+  update_total_correct();
+}
+
+/* function for checking select answers */
+select_func = function(e) {
+  console.log("webex: check select");
+  
+  var cl = this.classList
+  
+  /* add style */
+  cl.remove("webex-incorrect");
+  cl.remove("webex-correct");
+  if (this.value == "answer") {
+    cl.add("webex-correct");
+  } else if (this.value != "blank") {
+    cl.add("webex-incorrect");
+  }
+  
+  update_total_correct();
+}
+
+/* function for checking radiogroups answers */
+radiogroups_func = function(e) {
+  console.log("webex: check radiogroups");
+
+  var checked_button = document.querySelector('input[name=' + this.id + ']:checked');
+  var cl = checked_button.parentElement.classList;
+  var labels = checked_button.parentElement.parentElement.children;
+  
+  /* get rid of styles */
+  for (i = 0; i < labels.length; i++) {
+    labels[i].classList.remove("webex-incorrect");
+    labels[i].classList.remove("webex-correct");
+  }
+  
+  /* add style */
+  if (checked_button.value == "answer") {
+    cl.add("webex-correct");
+  } else {
+    cl.add("webex-incorrect");
+  }
+  
+  update_total_correct();
+}
+
+window.onload = function() {
+  console.log("onload");
+  /* set up solution buttons */
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].parentElement.classList.contains('webex-solution')) {
+      buttons[i].onclick = b_func;
+    }
+  }
+
+  /* set up webex-solveme inputs */
+  var solveme = document.getElementsByClassName("webex-solveme");
+
+  for (var i = 0; i < solveme.length; i++) {
+    /* make sure input boxes don't auto-anything */
+    solveme[i].setAttribute("autocomplete","off");
+    solveme[i].setAttribute("autocorrect", "off");
+    solveme[i].setAttribute("autocapitalize", "off");
+    solveme[i].setAttribute("spellcheck", "false");
+    solveme[i].value = "";
+
+    /* adjust answer for ignorecase or nospaces */
+    var cl = solveme[i].classList;
+    var real_answer = solveme[i].dataset.answer;
+    if (cl.contains("ignorecase")) {
+      real_answer = real_answer.toLowerCase();
+    }
+    if (cl.contains("nospaces")) {
+      real_answer = real_answer.replace(/ /g, "");
+    }
+    solveme[i].dataset.answer = real_answer;
+
+    /* attach checking function */
+    solveme[i].onkeyup = solveme_func;
+    solveme[i].onchange = solveme_func;
+  }
+  
+  /* set up radiogroups */
+  var radiogroups = document.getElementsByClassName("webex-radiogroup");
+  for (var i = 0; i < radiogroups.length; i++) {
+    radiogroups[i].onchange = radiogroups_func;
+  }
+  
+  /* set up selects */
+  var selects = document.getElementsByClassName("webex-select");
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].onchange = select_func;
+  }
+
+  update_total_correct();
+}
+
+</script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="example-3---mammal-weight-log-transformation-on-both-x-and-y.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exercise-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
