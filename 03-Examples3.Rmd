@@ -1,0 +1,55 @@
+# Example 3 - Mammal weight (log-transformation on both x and y)
+
+This data was collected to analyse the relationship between constitutional and ecological factors and sleeping (dreaming and non-dreaming) in mammals.
+Constitutional variables included life span, body weight, brain weight and gestation time. Ecological variables included severity of predation, safety of sleeping place and overall danger and were inferred from field observations in the literature. <br>
+
+We are interested in finding out if how body weight and brain
+weight are related.
+
+Import your dataset and get familiar with the data within it.
+
+<br> (a) i. Produce a scatterplot of body weight versus brain weight. 
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+mammals <- read.csv("MammalWeight.csv")
+plot(brain_wt ~ body_wt, data = mammals, xlab = "Body Weight (kg)", ylab = "Brain Weight (g)")
+```
+
+(ii) Perform a logtransformation on both variables and produce the scatterplot again with the new variables.<br>
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+mammals <- read.csv("MammalWeight.csv")
+plot(log(brain_wt) ~ log(body_wt), data = mammals, xlab = "Log(Body Weight)", ylab = "Log(Brain Weight)")
+```
+(iii) Which of the scatterplots seems to show a linear relationship? `r mcq(c(answer = "Transformed", "Untransformed"))`
+
+<br> (b) i. Fit a simple linear regression model to describe the relationship between log(body weight) and log(brain weight).
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+Model1 <- lm(log(brain_wt) ~ log(body_wt), data = mammals)
+```
+
+(ii) Produce the residual plots and find the coefficient of determination, $R^2$ to examine the fit of the model.
+
+```{r eval = TRUE, echo = TRUE, webex.hide="Solution"}
+plot(rstandard(Model1) ~ fitted(Model1))
+qqnorm(rstandard(Model1))
+summary(Model1)
+```
+
+(iii) Pick the correct interpretation of the model:
+```{r, echo = FALSE}
+opts_p <- c("The R-Squared value is too low and that indicates the model isn't a good fit without needing to look at the residual plots", answer = "The R-Squared value is high and both residual plots show the assumptions are met. Model1 is a well-fitting appropriate model", "The R-Squared value is high and but the residual plots show the assumptions are not met. Model1 is therefore not an appropriate model")
+```
+`r longmcq(opts_p)` <br>
+
+(iv) Interpret the parameters correctly and enter any numbers to 4 decimal places:
+
+The coefficient of log(body weight) is `r fitb(0.7517)`  means as the log of the body weight increases by 1, the expected log of the brain weight `r mcq(c(answer = "increases", "decreases"))` by `r fitb(0.7517)`. <br><br>
+
+(v) Using the created model predict the brain weight of an animal if the body weight is 350kg, to 3 decimal places:
+
+`r hide("Hint")` When predicting the value of the response for a new observation, we need to back transform the transformed response variable.
+`r unhide()`
+
+Brain weight = $exp\bigg($`r fitb(2.1348)` + (`r fitb(0.7517)` $\cdot$ log(`r fitb(350)`)) $\bigg)$ = `r fitb(691.047)`g.
