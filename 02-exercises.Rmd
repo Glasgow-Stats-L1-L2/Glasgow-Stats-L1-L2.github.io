@@ -1,0 +1,191 @@
+# Exercises
+
+---
+
+## Exercise 1 - `cheese` dataset
+
+a) Choose the best two variables among (**H2S**, log(**H2S**), **Lactic Acid**, log(**Lactic Acid**)) to explain **Taste** and construct a multiple linear regression model using them.
+
+```{r, echo=FALSE}
+
+cheese <- read.csv("cheese.csv")
+
+```
+
+`r hide("Hint")`
+
+The variable that best described a linear relationship with **Taste** was chosen he be log(**H2S**) in Practical 1. To choose a second variable, we can take another look at the plots created in Practical 1.
+
+```{r, eval = TRUE}
+# taste vs lactic acid
+plot(Taste ~ Lactic.Acid, data = cheese, xlab = "Lactic acid concentration", ylab = "Taste score")
+# taste vs H2S
+plot(Taste ~ H2S, data = cheese, xlab = "H2S concentration", ylab = "Taste score")
+
+# taste vs lactic acid
+plot(Taste ~ log(Lactic.Acid), data = cheese, xlab = " Log lactic acid concentration", ylab = "Taste score")
+# taste vs H2S
+plot(Taste ~ log(H2S), data = cheese, xlab = "Log H2S concentration", ylab = "Taste score")
+```
+
+`r unhide()`
+
+The 2 best variables to explain **Taste** are log(**H2S**) and `r mcq(c("H2S", answer="Lactic Acid", "log(Lactic Acid)"))`.
+
+b) Estimate the coefficients using the vector-matrix formulation and check they are same as the R
+output.
+
+
+`r hide("Hint")`
+
+Remember to define the design matrix and the response vector correctly.
+
+`r unhide()`
+
+`r hide("Solution")`
+
+```{r, echo=FALSE}
+
+X <- model.matrix(~ log(H2S) + Lactic.Acid, data = cheese)
+
+XtX <- t(X) %*% X
+
+# The inverse of XtX can be found by using solve(XtX)
+
+Y <- cheese$Taste
+
+XtY <- t(X) %*% Y
+
+beta.hat <- solve(XtX) %*% XtY
+
+# beta.hat can then  be compared to coef(lm(Taste ~ log(H2S) + Lactic.Acid, data = cheese))
+```
+
+`r unhide()`
+
+The `R` command to create the design matrix is `r mcq(c("design", "design.matrix", "model", answer="model.matrix"))`
+
+Give your answers to 2 decimal places.
+
+The intercept is roughly `r fitb(-27.592)`.
+
+The coefficient describing the effect of log(**H2S**) is roughly `r fitb(3.946)`.
+
+The coefficient describing the effect of **Lactic Acid** is roughly `r fitb(19.887)`.
+
+c) Interpret the estimated coefficients.
+
+The model tells us that for every 1 unit increase in log(**H2S**), the **Taste** score goes up by roughly `r fitb(3.946)`, `r mcq(c(answer="when Lactic Acid remains the same", "regardless of changes in Lactic Acid"))`. 
+
+Similarly, for every 1 unit increase in **Lactic Acid**, the **Taste** score goes up by roughly `r fitb(19.887)`, `r mcq(c(answer="when log(H2S) remains the same", "regardless of changes in log(H2S"))`. 
+
+
+## Exercise 2 - Nicholas Cage data
+
+Hollywood legend Nicholas Cage seems to have a problem. It appears that every time he releases
+a new film upon the world many people drown by falling into pools of water. Coincidence? Or,
+are some of his films that bad?
+
+**Data: Cage.csv**
+
+Read in the data using:
+<center> `Cage <- read.csv("Cage.csv")` </center>
+
+```{r,echo=FALSE}
+Cage <- read.csv("Cage.csv")
+```
+
+a) Produce a scatterplot of **NumDrowned** (_y_) against **NumFilms** (_x_). 
+
+`r hide("Solution")`
+
+```{r}
+plot(NumDrowned ~ NumFilms, data = Cage, xlab = "Number of Nicholas Cage films released in a year", ylab = "Number of people who drowned falling into pools that year")
+```
+
+`r unhide()`
+
+Use the `cor.test` command to perform a correlation hypothesis test. What does this tell us about
+the relationship between **NumDrowned** and **NumFilms**?
+
+The sample correlation coefficient is `r fitb(0.666)` _(to 3 decimal places)_.
+
+According to the hypothesis test carried out, we `r mcq(c("fail to reject the null hypothesis", answer="reject the null hypothesis"))`. This means we conclude the true correlation between the two variables is `r mcq(c("equal to 0", answer="not equal to zero"))`.
+
+`r hide("Solution")`
+
+```{r}
+cor.test(Cage$NumDrowned, Cage$NumFilms)
+```
+
+`r unhide()`
+
+This is an example of **spurious correlation**, where two variables that are not related to each other in any
+way, that is, they are independent, could be inferred as being related. The number of Nicholas Cage films
+released in a year is clearly not related to the number of drowning accidents in that same year, but if we just
+take our correlation hypothesis test on face value, then we would think otherwise.
+
+
+## Exercise 3 - Context: identifying relationships
+
+For the following contexts determine whether fitting a regression model would be appropriate. If a regression model is appropriate, identify which variable is the **response variable** and which is the **explanatory variable**.
+
+a) Is federal spending, on average, higher or lower in countries with high rates of poverty?
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Federal spending: `r mcq(c("Explanatory", answer="Response"))` Poverty rates: `r mcq(c(answer="Explanatory", "Response"))`
+
+b) A study was conducted to determine whether surgery or chemotherapy results in higher survival rates
+for a certain type of cancer.
+
+Regression model appropriate? `r mcq(c(answer="No", "Yes"))`
+
+Type of treatment: `r mcq(c(answer="Explanatory", "Response"))` Survival rates: `r mcq(c("Explanatory", answer="Response"))`
+
+c) A study found that, overall, left-handed people die at a younger age than right-handed people.
+
+Regression model appropriate? `r mcq(c(answer="No", "Yes"))`
+
+Age of death: `r mcq(c("Explanatory", answer="Response"))` Left- or right-handed: `r mcq(c(answer="Explanatory", "Response"))`
+
+d) Per capita cheese consumption is correlated with the number of people who died getting tangled in
+bed sheets.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Number of people who died getting tangled in bed sheets: `r mcq(c("Explanatory", answer="Response"))` Per capita cheese consumption: `r mcq(c(answer="Explanatory", "Response"))`
+
+e) An experiment was conducted to test the effects of sleep deprivation on human reaction times.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Hours of sleep: `r mcq(c(answer="Explanatory", "Response"))` Reaction times: `r mcq(c("Explanatory", answer="Response"))`
+
+f) A study was conducted in order to predict the GPA of university students given their high school
+GPA.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+GPA of university students: `r mcq(c("Explanatory", answer="Response"))` High school GPA: `r mcq(c(answer="Explanatory", "Response"))`
+
+g) A company wants to know if there is a significant relationship between its advertising expenditures
+and its sales volume.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Sales volume: `r mcq(c("Explanatory", answer="Response"))` Advertising expenditures: `r mcq(c(answer="Explanatory", "Response"))`
+
+h) A sample of insured drivers with similar insurance policies were randomly selected. Interest is in
+determining whether there is a significant relationship between driving experience and insurance
+premium.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Driving experience: `r mcq(c(answer="Explanatory", "Response"))` Insurance premium: `r mcq(c("Explanatory", answer="Response"))`
+
+i) Ice cream sales are correlated with murder rates in the US.
+
+Regression model appropriate? `r mcq(c("No", answer="Yes"))`
+
+Murder rates: `r mcq(c("Explanatory", answer="Response"))` Ice cream sales: `r mcq(c(answer="Explanatory", "Response"))`
