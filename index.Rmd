@@ -1,6 +1,5 @@
 ---
-title: "Practical 2 - Understanding correlation and further exploring relationships"
-author: "Team in Room 420 - Megan Ruffle, Naphon Olley, Jennifer James, William Ryan"
+title: "S1Z Lab 1"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -8,65 +7,69 @@ biblio-style: apalike
 link-citations: yes
 ---
 
-# Intro
-
----
-
-## Intended Learning Outcomes
-
-After attending this lab, you should be able to use `R` to:
-
-- calculate least squares estimates of model parameters using vector-matrix formulation;
-- calculate and interpret the sample correlation coefficient;
-- perform hypothesis tests on the population correlation and interpret the decision.
-
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!requireNamespace("webexercises")) {
-  stop("You must have the 'webexercises' package installed to knit to HTML.\n   install.packages(\"webexercises\")")
-} else {
-  library("webexercises")
-}
+library(tidyverse)
+library(openintro)
+library(infer)
+library(gridExtra)
+library(HistData)
 library(webexercises)
-library(tinytex)
-library(ggplot2)
-library(dplyr)
-library(knitr)
-library(PASWR2)
-library(downlit)
-library(xml2)
+
+YRBSS <- yrbss 
+yrbss <- na.omit(yrbss) 
+
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r eval=FALSE, echo=FALSE}
 install.packages("bookdown")
-# or the development version
-# devtools::install_github("rstudio/bookdown")
 ```
 
 ```{r include=FALSE, echo=FALSE}
-# automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
 ), 'packages.bib')
 ```
 
-## Introduction
+# Welcome to S1Z Lab 1 {-}
 
-In the lectures we learned how to assess the strength of a linear relationship between random variables using the correlation coefficient.  The population correlation is a measure of the magnitude of the strength of the relationship between two random variables X and Y, and is defined as
+```{r graphic1, echo = FALSE, out.width = "100%", fig.cap = ""}
+knitr::include_graphics("images/naniar.jpg")
+```
 
-\begin{equation}
-\rho(X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\text{Var}(Y)}},
-(\#eq:eq1)
-\end{equation}
+In this lab, we will investigate the ways in which the statistics from a random sample can serve to make inference and **test hypotheses** about the true parameter in the larger population. We will explore here inference methods for numerical data. Before we begin however, let's revisit the difference between categorical and numerical data.
 
-and can be estimated by replacing each of $\text{Cov}(X,Y)$, \text{Var}(X) and \text{Var}(Y) by their unbiased estimators to give
+**Categorical Data =** Data where an observation can belong to one of a certain fixed number of categories or groups. For example, someone's bloodtype. Your bloodtype can be one of A, B, AB or O. 
 
-\begin{equation}
-r = \frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}}=\frac{\sum^{n}_{i=1}(x_i-\overline{x})(y_i-\overline{y})}{\sqrt{\sum^{n}_{i=1}(x_i-\overline{x})^2(y_i-\overline{y})^2}},
-(\#eq:eq2)
-\end{equation}
+**Numerical Data =** Data in the form of numbers; rather than being defined as a member of some group or category. It also must make sense for calculations to be performed on those numbers, such as adding them or taking averages of them. This is important, for example a phone number is a number but it doesn't make sense to add phone numbers together. An example of numerical data is your height. It's measured with a number you can perform calculations directly on such as averages. Another example would be a count of the number of patients seen at a GP Surgery in a day. 
 
-the **sample correlation coefficient** (-1 $\le r \le$ 1).
+The material within this lab has been based on <a href="https://www.openintro.org/redirect.php?go=os4_tablet&referrer=/stat/os4.php#page=206">OpenIntro Chapter 7</a>. Feel free to refer back to the materials to help you within this lab. 
 
-Given a sample of data, we can assess the statistical significance of the observed correlations between
-variables in the wider population. To do this we perform a hypothesis test (more on this in Chapter \@ref(twopointtwo)).
+<br>
+
+## `tidyverse` packages {-}
+
+These labs use **packages** from the `tidyverse` suite of packages, which has been called "the most powerful collection of R Packages for data science". You don't need to go into much depth for these labs, but if you were interested, this <a href="https://tidyverse-intro.github.io/">intro</a> is a good place to start.
+
+*Aside:* A **package** in R is just a collection of functions, data, documentation and compiled code that people have created to easily access and share with others.
+
+To run the code that appears in the consoles in this lab in your own version of RStudio, start by installing and loading these packages.
+
+```{r load-packages, echo=TRUE, eval=FALSE}
+install.packages("tidyverse")
+install.packages("infer")
+install.packages("openintro")
+
+library(tidyverse)
+library(infer)
+library(openintro)
+```
+
+<br>
+
+**Credit where credit is due**
+
+<img style="float: right;" src="images/OIBookImage.png" width="100"/>
+
+The labs in S1Y/Z are a derivative of the labs on the  <a href="https://www.openintro.org/book/os/">OpenIntro Statistics website</a> by the <a href="https://www.openintro.org/team/"> OpenIntro team</a> used under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.  Some of the artwork used is by <a href="https://github.com/allisonhorst/stats-illustrations">@allison_horst</a>
+

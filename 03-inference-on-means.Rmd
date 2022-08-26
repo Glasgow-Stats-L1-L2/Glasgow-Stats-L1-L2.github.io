@@ -1,0 +1,204 @@
+# Inference on Means {-}
+
+## Conditions for Inference, or, a Normality Check {-}
+
+As seen on the bottom of <a href="https://www.openintro.org/redirect.php?go=os4_tablet&referrer=/stat/os4.php#page=251" target="_blank">OpenIntro Page 251</a> two conditions are required for making inference on numerical variables:
+
+ - **Independence:** The sample observations must be independent. The most common way to satisfy this condition is when the sample is a simple random sample from the population.
+
+ - **Normality:** When a sample is small, we also require that the sample observations come from a normally distributed population. We can relax this condition more and more for larger and larger sample sizes. This condition is obviously vague, making it difficult to evaluate, so next we introduce a couple rules of thumb to make checking this condition easier.
+ 
+   + $n < 30:$ If the sample size n is less than 30 *and* there are no clear outliers in the data, then we typically assume the data come from a  normal enough distribution to satisfy the condition.
+ 
+   + $n \geq 30:$ If the sample size n is at least 30 and there are no *particularly* extreme outliers, then we typically assume adequate normality.
+
+<br>
+
+### Exercise 3 {-}
+
+Are all conditions necessary for inference satisfied for our data?
+
+```{r MCQ3}
+opts_Q3 <- c(answer = "Yes",
+             "No")
+```
+
+<br>
+
+**Is the independence condition satisfied?**
+`r longmcq(opts_Q3)`
+
+`r hide("Hint")`
+Consider the structure of the data i.e. The collection of students. In general, are the students independent of one another?
+`r unhide()`
+
+<br>
+
+Both the sample size and the distribution of the boxplots would help us verify normality. Compute the sizes of the two groups, (yes/no for the `physical_3plus` variable) by using the `summarise()` function. Also recreate the boxplot of `physical_3plus` and `weight` from Exercise 2 to check the normality assumption.
+
+`r hide("Hint")`
+To count the group sizes, you first want to `group_by` the variable `physical_3plus`, and then `count` the number of observations, `n()`, there are in each group.
+To make the boxplot, `physical_3plus` should be along the $x$-axis and `weight` should be along the $y$-axis.
+`r unhide()`
+
+```{r ex3_solution, webex.hide="Solution", echo=TRUE, eval=TRUE}
+yrbss %>%
+  group_by(physical_3plus) %>%
+  summarise(count = n())
+
+ggplot(yrbss, aes(y = weight, x = physical_3plus)) +
+  geom_boxplot()
+```
+
+```{r MCQ4}
+opts_Q4 <- c(answer = "Yes",
+             "No")
+```
+
+<br>
+**Is the normality condition satisfied?**
+`r longmcq(opts_Q4)`
+
+`r hide("Hint")`
+Consider the size of the two groups and whether any outliers are extreme.
+`r unhide()`
+
+<br>
+
+### Exercise 4 {-}
+
+Since the assumptions of independence and normality are both satisfied, we can proceed with making inference, and hence construct confidence intervals or perform a hypothesis test about the weight variable for those who exercise at least three times a week and those who don't.
+
+Let
+$$\mu_l = \textrm{Average weight of a student who is physically active less than 3 days a week}$$
+and
+
+$$\mu_m = \textrm{Average weight of a student who is physically active 3 or more days a week}$$
+
+```{r MCQ5}
+opts_Q5 <- sample(c("$H_0:  \\mu_l \\ne \\mu_m , H_1: \\mu_l = \\mu_m$",
+                    answer = "$H_0:  \\mu_l = \\mu_m , H_1: \\mu_l \\ne \\mu_m$",
+                    "$H_0:  \\mu_l = \\mu_m , H_1: \\mu_l < \\mu_m$",
+                    "$H_0:  \\mu_l = \\mu_m , H_1: \\mu_l > \\mu_m$"))
+```
+
+<br>
+
+**What are the null and alternative hypotheses for testing if the average weights are different for those who exercise at least three times a week and those who don’t?**
+`r longmcq(opts_Q5)`
+
+`r hide("Hint")`
+The only question you can answer is whether there is a statistically significant difference between the two average weights. You can't test at the moment how different they are.
+`r unhide()`
+
+<br>
+
+## Confidence Interval {-}
+
+Next, we will be conducting a hypothesis test, and ultimately a confidence interval, for a **difference of two means**. Namely, the mean weights in the two groups (those that are active 3+ days a week and the other group that aren't). More details on this can be found on <a href="https://www.openintro.org/redirect.php?go=os4_tablet&referrer=/stat/os4.php#page=267" target="_blank">page 267 of the OpenIntro textbook</a>.
+
+In general, we have some sort of 
+$$\textrm{Statistic} \pm \textrm{Percentile of a distribution}*\textrm{Standard Error}$$
+
+More specifically, we have the following:
+$$(\mu_1 - \mu_2) \pm t^* \times \textrm{SE}$$
+
+So our new statistic is $(\mu_1 - \mu_2)$, the difference in averages between the two groups, our new percentile is $t^*$, from something called the t-distribution rather than the standard Normal distribution. The standard error $\textrm{SE}$ now equals
+
+$$\textrm{SE} = \sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}$$
+
+where $n_1$, $n_2$ are the sample sizes of the two groups you're considering and $\sigma_1^2$, $\sigma_2^2$ are the variances of the two groups. Putting it all together, our confidence interval for the difference in means between two groups is:
+
+$$(\mu_1 - \mu_2) \pm t^* \times \sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}$$
+
+We first calculate $(\mu_1 - \mu_2)$, which we will save as `obs_diff`. This is the difference in the two means of the weights of the two groups of students; one that is active 3+ days a week and the other group that isn't. Namely we are taking group 1 to be "yes" active 3+ days a week and group 2 to be "no" not active 3+ days a week.
+
+```{r obsdiff, eval=TRUE, echo=TRUE, warning=FALSE}
+
+yes <- yrbss %>%
+  filter(physical_3plus == "yes")
+
+no <- yrbss %>%
+  filter(physical_3plus == "no")
+
+mu1 <- mean(yes$weight)
+
+mu2 <- mean(no$weight)
+
+obs_diff <- (mu1 - mu2)
+```
+
+<br>
+
+Now recall our calculation from Exercise 3 to get our $n_1$ and $n_2$ i.e. the sizes of the two groups, remembering that "yes" means group 1 and "no" means group 2.
+
+```{r n1and2, eval=TRUE, echo=TRUE, warning=FALSE}
+yrbss %>%
+  group_by(physical_3plus) %>%
+  summarise(count = n())
+
+n1 <- 5695
+
+n2 <- 2656
+```
+
+<br>
+
+Next, our $t^*$ value. As it happens, (due to a rigorously proved and fascinating result in Statistics), for sufficiently large n, the t-distribution tends toward the normal distribution. As in, when your sample size is big enough the t distribution is basically identical to the standard normal distribution. Therefore, since the samples we have are so large, our $t^*$ value this time is also 1.96 for a 95% confidence interval. Make sure you always check though, because you often will have a smaller sample and therefore your $t^*$ will be different!
+
+```{r tstar, echo=TRUE, eval=TRUE, warning=FALSE, message=FALSE}
+t.star <- 1.96
+```
+
+<br>
+
+Now we will get the variances of the two groups.
+
+```{r sigmasquareds, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+sigma_squared_1 <- var(yes$weight)
+
+sigma_squared_2 <- var(no$weight)
+```
+
+<br>
+
+Finally, let's put it all together and get our confidence interval!
+
+```{r ci, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+standard.error <- sqrt((sigma_squared_1/n1) + (sigma_squared_2/n2))
+
+lower.bound <- obs_diff - t.star*standard.error
+
+upper.bound <- obs_diff + t.star*standard.error
+
+c(lower.bound, upper.bound)
+```
+
+<br>
+
+**Note** It is equivalent to slightly re-arrange the above null and alternative hypotheses, that is we consider the difference between two means such that:
+
+$$H_0:  \mu_l - \mu_m = 0$$
+
+$$H_1: \mu_l - \mu_m \ne 0$$
+
+Namely there is no difference between the average weights of the two groups of students, or there is a difference in average weights between the two groups. Notice this is just a rearranging of the equation.
+
+```{r MCQ6}
+opts_Q6 <- sample(c("Since the obs. dif. value is outside of the CI, we fail to reject the null hypothesis i.e. We conclude there is no statistically significant difference in the mean weights of students who are and aren't physcially active 3+ days a week.",
+                    answer = "Since the CI does not contain 0, we reject the null hypothesis in favour of the alternative i.e. We conclude there is a statistically significant difference in the mean weights of students who are and aren't physcially active 3+ days a week.",
+                    "Since the CI contains 0, we fail to reject the null hypothesis i.e. conclude that there is a statistically significant difference in the mean weights of students who are and aren't physcially active 3+ days a week.",
+                    "Since the CI does not contain 0, we fail to reject the null hypothesis i.e. conclude that there is no statistically significant difference in the mean weights of students who are and aren't physcially active 3+ days a week."))
+```
+
+<br>
+
+**Looking at the confidence interval, what do you conclude?**
+`r longmcq(opts_Q6)`
+
+`r hide("Hint")`
+Consider whether the interval contains a certain vital number.
+`r unhide()`
+
+<br>
+
